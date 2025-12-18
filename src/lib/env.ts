@@ -6,7 +6,15 @@ const envSchema = z.object({
     BETTER_AUTH_SECRET: z.string(),
     BETTER_AUTH_URL: z.url(),
 
-    ARC_STUDIO_URL: z.url(),
+    GITHUB_CLIENT_ID: z.string(),
+    GITHUB_CLIENT_SECRECT: z.string(),
+
+    VERCEL_CLIENT_ID: z.string(),
+    VERCEL_CLIENT_SECRECT: z.string(),
+
+    WEB_APP_URL: z.url(),
+    WEB_DEV_URL: z.url(),
+    WEB_URL: z.url(),
     
     MONGODB_URI: z.string()
 });

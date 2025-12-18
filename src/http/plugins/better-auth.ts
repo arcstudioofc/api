@@ -2,7 +2,7 @@ import { Elysia } from "elysia";
 import { node } from "@elysiajs/node";
 // import { openAPI } from "better-auth/plugins";
 
-import { auth } from "../../lib/auth.js";
+import { auth } from "../../lib/auth/index.js";
 
 export const betterAuthPlugins = new Elysia({
   adapter: node(),

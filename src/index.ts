@@ -12,7 +12,7 @@ import { env } from "./lib/env.js";
 const app = new Elysia({ adapter: node() })
   .use(
     cors({
-      origin: [env.ARC_STUDIO_URL],
+      origin: [env.WEB_APP_URL, env.WEB_URL, env.WEB_DEV_URL],
       methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
       credentials: true,
       allowedHeaders: ["Content-Type", "Authorization"],
@@ -30,13 +30,13 @@ const app = new Elysia({ adapter: node() })
     })
   )
   .use(betterAuthPlugins)
-  .get("/", () => "ARC Studio, api.", {
+  .get("/", () => "Hello, World!", {
     detail: {
       tags: ["Default"],
     },
   })
   .get(
-    "/users/:id",
+    "/users/{id}",
     ({ params, user }) => {
       const userId = params.id;
 
@@ -49,7 +49,7 @@ const app = new Elysia({ adapter: node() })
     {
       auth: true,
       detail: {
-        summary: "buscar um usuário pelo ID",
+        summary: "/users/{id}",
         tags: ["Users"],
       },
       params: z.object({
@@ -64,5 +64,9 @@ const app = new Elysia({ adapter: node() })
     }
   )
   .listen(3333, ({ hostname, port }) => {
-    consola.success(chalk.bold(`Servidor está rodando em: ${chalk.bgGreen(`${hostname}:${port}`)}`));
+    consola.success(
+      chalk.bold(
+        `Servidor está rodando em: ${chalk.bgGreen(`${hostname}:${port}`)}`
+      )
+    );
   });
