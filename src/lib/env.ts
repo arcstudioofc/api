@@ -1,22 +1,20 @@
 import { z } from 'zod';
 import 'dotenv/config';
 
-
 const envSchema = z.object({
-    BETTER_AUTH_SECRET: z.string(),
-    BETTER_AUTH_URL: z.url(),
+  BETTER_AUTH_SECRET: z.string(),
+  BETTER_AUTH_URL: z.url(),
 
-    GITHUB_CLIENT_ID: z.string(),
-    GITHUB_CLIENT_SECRECT: z.string(),
+  PORT: z.coerce.number(),
 
-    VERCEL_CLIENT_ID: z.string(),
-    VERCEL_CLIENT_SECRECT: z.string(),
+  GITHUB_CLIENT_ID: z.string(),
+  GITHUB_CLIENT_SECRECT: z.string(),
 
-    WEB_APP_URL: z.url(),
-    WEB_DEV_URL: z.url(),
-    WEB_URL: z.url(),
-    
-    MONGODB_URI: z.string()
+  WEB_APP_URL: z.url(),
+  WEB_DEV_URL: z.url(),
+  WEB_URL: z.url(),
+
+  MONGODB_URI: z.string(),
 });
 
 export const env = envSchema.parse(process.env);

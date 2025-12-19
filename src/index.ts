@@ -9,7 +9,7 @@ import { z } from "zod";
 import { betterAuthPlugins, OpenAPI } from "./http/plugins/better-auth.js";
 import { env } from "./lib/env.js";
 
-const app = new Elysia({ adapter: node() })
+new Elysia({ adapter: node() })
   .use(
     cors({
       origin: [env.WEB_APP_URL, env.WEB_URL, env.WEB_DEV_URL],
@@ -63,10 +63,9 @@ const app = new Elysia({ adapter: node() })
       },
     }
   )
-  .listen(3333, ({ hostname, port }) => {
+  .listen(env.PORT, ({ port }) => {
+    consola.info(chalk(`Rodando na porta: ${chalk.bgBlueBright(port)}\n`));
     consola.success(
-      chalk.bold(
-        `Servidor está rodando em: ${chalk.bgGreen(`${hostname}:${port}`)}`
-      )
+      chalk(`Servidor iniciado com ${chalk.bgGreenBright("sucesso")}`)
     );
   });

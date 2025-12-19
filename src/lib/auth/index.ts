@@ -73,10 +73,10 @@ export const auth = betterAuth({
       clientId: env.GITHUB_CLIENT_ID,
       clientSecret: env.GITHUB_CLIENT_SECRECT,
     },
-    vercel: {
-      clientId: env.VERCEL_CLIENT_ID,
-      clientSecret: env.VERCEL_CLIENT_SECRECT,
-      scope: ["openid", "email", "profile"], 
-    },
+    // vercel: {
+    //   clientId: env.VERCEL_CLIENT_ID,
+    //   clientSecret: env.VERCEL_CLIENT_SECRECT,
+    //   scope: ["openid", "email", "profile"], 
+    // },
   },
 });
