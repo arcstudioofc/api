@@ -10,6 +10,8 @@ const envSchema = z.object({
   GITHUB_CLIENT_ID: z.string(),
   GITHUB_CLIENT_SECRECT: z.string(),
 
+  RESEND_API_KEY: z.string(),
+
   WEB_APP_URL: z.url(),
   WEB_DEV_URL: z.url(),
   WEB_URL: z.url(),

@@ -7,7 +7,7 @@ import { cors } from "@elysiajs/cors";
 import { z } from "zod";
 
 import { betterAuthPlugins, OpenAPI } from "./http/plugins/better-auth.js";
-import { env } from "./lib/env.js";
+import { env } from "@/lib/env.js";
 
 new Elysia({ adapter: node() })
   .use(

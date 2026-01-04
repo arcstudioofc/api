@@ -1,11 +1,12 @@
 import { betterAuth } from "better-auth";
-import { openAPI, username } from "better-auth/plugins";
+import { openAPI, username, admin } from "better-auth/plugins";
 import { nextCookies } from "better-auth/next-js";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
+// import { Resend } from "resend";
 import { MongoClient } from "mongodb";
 import argon2 from "argon2";
 
-import { env } from "../env.js";
+import { env } from "@/lib/env.js";
 
 const client = new MongoClient(env.MONGODB_URI);
 const db = client.db("api");
@@ -22,6 +23,7 @@ export const auth = betterAuth({
   }),
 
   plugins: [
+    admin(),
     openAPI(),
     nextCookies(),
     username({
@@ -60,6 +62,7 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     autoSignIn: true,
+    // requireEmailVerification: true,
     minPasswordLength: 8,
     maxPasswordLength: 120,
     password: {
@@ -67,6 +70,28 @@ export const auth = betterAuth({
       verify: ({ password, hash }) => argon2.verify(hash, password),
     },
   },
+
+  // emailVerification: {
+  //   sendOnSignInUp: true,
+  //   sendVerificationEmail: async ({ user, url }) => {
+  //     try {
+  //       await new Resend(env.RESEND_API_KEY).emails.send({
+  //         from: "ARC Studio, Inc. <no-reply@arcstudio.online>",
+  //         to: user.email,
+  //         subject: "Verify your email address",
+  //         react: (
+  //           await import("../email/verify-email.jsx")
+  //         ).default({
+  //           verifyUrl: url,
+  //           username: user.name || "unknown",
+  //         }),
+  //       });
+  //     } catch (err) {
+  //       console.error("Email verification failed", err);
+  //       throw err;
+  //     }
+  //   },
+  // },
 
   socialProviders: {
     github: {
@@ -76,7 +101,7 @@ export const auth = betterAuth({
     // vercel: {
     //   clientId: env.VERCEL_CLIENT_ID,
     //   clientSecret: env.VERCEL_CLIENT_SECRECT,
-    //   scope: ["openid", "email", "profile"], 
+    //   scope: ["openid", "email", "profile"],
     // },
   },
 });
