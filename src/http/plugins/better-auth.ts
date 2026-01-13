@@ -1,57 +1,48 @@
-import { Elysia } from "elysia";
-import { node } from "@elysiajs/node";
-// import { openAPI } from "better-auth/plugins";
+import Elysia from "elysia";
 
-import { auth } from "../../lib/auth/index.js";
+import { auth } from "@/config/auth";
 
-export const betterAuthPlugins = new Elysia({
-  adapter: node(),
-  name: "better-auth",
-})
-  .mount(auth.handler)
-  .macro({
-    auth: {
-      async resolve({ status, headers }) {
-        // headers = Fetch API Headers (correto para Better Auth)
-        const session = await auth.api.getSession({ headers });
+export const betterAuthPlugin = new Elysia({ name: "Better Auth" })
+    .mount(auth.handler)
+    .macro({
+        auth: {
+            async resolve({ status, request: { headers }}) {
+                const session = await auth.api.getSession({ headers });
 
-        if (!session) {
-          return status(401, { message: "Unauthorized." });
+
+                if (!session) {
+                    return status(401, { message: "not authenticated" })
+                }
+
+                return {
+                    user: session.user
+                };
+            }
         }
+    })
 
-        return {
-          user: session.user,
-          session: session.session,
-        };
-      },
-    },
-  });
 
-let _schema: ReturnType<typeof auth.api.generateOpenAPISchema>;
 
-const getSchema = async () =>
-  (_schema ??= auth.api.generateOpenAPISchema());
+let _schema: ReturnType<typeof auth.api.generateOpenAPISchema>
+const getSchema = async () => (_schema ??= auth.api.generateOpenAPISchema())
 
 export const OpenAPI = {
-  getPaths: (prefix = "/auth") =>
-    getSchema().then(({ paths }) => {
-      const reference: typeof paths = Object.create(null);
+    getPaths: (prefix = '/auth') =>
+        getSchema().then(({ paths }) => {
+            const reference: typeof paths = Object.create(null)
 
-      for (const path of Object.keys(paths)) {
-        const original = paths[path];
-        if (!original) continue; // Evita undefined
+            for (const path of Object.keys(paths)) {
+                const key = prefix + path
+                reference[key] = paths[path]
 
-        const key = prefix + path;
-        reference[key] = original;
+                for (const method of Object.keys(paths[path])) {
+                    const operation = (reference[key] as any)[method]
 
-        for (const method of Object.keys(original)) {
-          const operation = (reference[key] as any)[method];
-          operation.tags = ["Better Auth"];
-        }
-      }
+                    operation.tags = ['Auth system']
+                }
+            }
 
-      return reference;
-    }) as Promise<any>,
-
-  components: getSchema().then(({ components }) => components) as Promise<any>,
-} as const;
+            return reference
+        }) as Promise<any>,
+    components: getSchema().then(({ components }) => components) as Promise<any>
+} as const

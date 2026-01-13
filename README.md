@@ -1,2 +1,1 @@
-# api
-API da ARC Studio, Inc.
+# ARC Studio, API.
