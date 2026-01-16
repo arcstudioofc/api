@@ -1,8 +1,9 @@
-import Elysia from "elysia";
+import { Elysia } from "elysia";
+import { node } from "@elysiajs/node";
 
-import { auth } from "@/config/auth";
+import { auth } from "@/config/auth.js";
 
-export const betterAuthPlugin = new Elysia({ name: "Better Auth" })
+export const betterAuthPlugin = new Elysia({ name: "Better Auth", adapter: node() })
     .mount(auth.handler)
     .macro({
         auth: {
