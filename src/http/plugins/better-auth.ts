@@ -6,12 +6,11 @@ export const betterAuthPlugin = new Elysia({ name: "Better Auth" })
     .mount(auth.handler)
     .macro({
         auth: {
-            async resolve({ status, request: { headers }}) {
+            async resolve({ status, request: { headers } }) {
                 const session = await auth.api.getSession({ headers });
 
-
                 if (!session) {
-                    return status(401, { message: "not authenticated" })
+                    return status(401, { message: "not authenticated" });
                 }
 
                 return {
@@ -19,30 +18,35 @@ export const betterAuthPlugin = new Elysia({ name: "Better Auth" })
                 };
             }
         }
-    })
+    });
 
+let _schema: Awaited<ReturnType<typeof auth.api.generateOpenAPISchema>> | undefined;
 
-
-let _schema: ReturnType<typeof auth.api.generateOpenAPISchema>
-const getSchema = async () => (_schema ??= auth.api.generateOpenAPISchema())
+const getSchema = async () =>
+    (_schema ??= await auth.api.generateOpenAPISchema());
 
 export const OpenAPI = {
-    getPaths: (prefix = '/auth') =>
-        getSchema().then(({ paths }) => {
-            const reference: typeof paths = Object.create(null)
+    getPaths: async (prefix = "/auth") => {
+        const { paths = {} } = await getSchema();
 
-            for (const path of Object.keys(paths)) {
-                const key = prefix + path
-                reference[key] = paths[path]
+        const reference: typeof paths = Object.create(null);
 
-                for (const method of Object.keys(paths[path])) {
-                    const operation = (reference[key] as any)[method]
+        for (const path of Object.keys(paths)) {
+            const key = prefix + path;
+            const pathItem = paths[path];
 
-                    operation.tags = ['Auth system']
-                }
+            if (!pathItem) continue;
+
+            reference[key] = pathItem;
+
+            for (const method of Object.keys(pathItem)) {
+                const operation = (pathItem as Record<string, any>)[method];
+                operation.tags = ["Auth system"];
             }
+        }
 
-            return reference
-        }) as Promise<any>,
-    components: getSchema().then(({ components }) => components) as Promise<any>
-} as const
+        return reference;
+    },
+
+    components: getSchema().then(({ components }) => components)
+} as const;

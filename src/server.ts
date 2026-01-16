@@ -28,15 +28,17 @@ export const app = new Elysia({ name: "ARC Studio, API." })
           version: PKG.version,
           description: "Principal API for ARC Studio, Inc.",
         },
-        components: await OpenAPI.components,
-        paths: await OpenAPI.getPaths(),
+
+        // ⬇️ AQUI é onde a fantasia acaba
+        components: (await OpenAPI.components) as any,
+        paths: (await OpenAPI.getPaths()) as any,
+
         tags: [
           { name: "Default", description: "Default routes" },
           {
             name: "Auth system",
             description: "System authentication for users in routes",
           },
-          // { name: "Models", description: "Users, Sessions, etc... for models" },
         ],
       },
     })
@@ -44,11 +46,9 @@ export const app = new Elysia({ name: "ARC Studio, API." })
   .use(betterAuthPlugin)
   .get(
     "/",
-    () => {
-      return {
-        message: `Hello, ARC.`,
-      };
-    },
+    () => ({
+      message: "Hello, ARC.",
+    }),
     {
       detail: {
         summary: "/",
@@ -60,6 +60,7 @@ export const app = new Elysia({ name: "ARC Studio, API." })
     "/me",
     ({ user }) => {
       const { id, name, email, emailVerified, role } = user;
+
       return {
         id,
         name,
@@ -67,7 +68,6 @@ export const app = new Elysia({ name: "ARC Studio, API." })
         emailVerified,
         role,
       };
-      // return user;
     },
     {
       auth: true,
@@ -75,14 +75,11 @@ export const app = new Elysia({ name: "ARC Studio, API." })
         summary: "/me",
         tags: ["Default"],
       },
-      // params: z.object({
-      //   id: z.string(),
-      // }),
       response: {
         201: z.object({
           id: z.string(),
           name: z.string(),
-          email: z.email(),
+          email: z.string().email(),
           emailVerified: z.boolean(),
           role: z.string(),
         }),
@@ -93,14 +90,8 @@ export const app = new Elysia({ name: "ARC Studio, API." })
     }
   )
   .listen(
-    {
-      port: env.DEFAULT_PORT,
-    },
+    { port: env.DEFAULT_PORT },
     (info) => {
       logger(`🔥 api is running at ${info.hostname}:${info.port}`);
     }
   );
-function readFileSync(arg0: string): BodyInit | null | undefined {
-  throw new Error("Function not implemented.");
-}
-

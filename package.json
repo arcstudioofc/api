@@ -1,15 +1,19 @@
 {
   "name": "api",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "scripts": {
-    "dev": "bun run --watch --env-file=.env.local src/server.ts",
+    "dev": "bun --env-file=.env.development.local src/server.ts",
     "build": "tsc && tsc-alias",
-    "start": "bun run dist/src/server.js",
-    "server:compile": "bun build --compile --minify-whitespace --minify-syntax --target bun --outfile ./dist/server src/server.ts",
-    "server:start": "./dist/server"
+    "start": "bun dist/server.js"
+  },
+  "author": {
+    "name": "Israel R. Jatobá",
+    "email": "contact.israeljatoba@gmail.com",
+    "url": "https://yeytaken.vercel.app/en-us"
   },
   "dependencies": {
     "@elysiajs/cors": "^1.4.1",
+    "@elysiajs/node": "^1.4.3",
     "@elysiajs/openapi": "^1.4.13",
     "argon2": "^0.44.0",
     "better-auth": "^1.4.12",
@@ -22,7 +26,7 @@
   "devDependencies": {
     "bun-types": "latest",
     "tsc-alias": "^1.8.16",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3"
-  },
-  "module": "src/src/server.js"
+  }
 }
