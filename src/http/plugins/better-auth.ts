@@ -10,10 +10,8 @@ export const betterAuthPlugin = new Elysia({
   .mount(auth.handler)
   .macro({
     auth: {
-      async resolve({ status, request }) {
-        const session = await auth.api.getSession({
-          headers: request.headers,
-        });
+      async resolve({ status, headers }) {
+        const session = await auth.api.getSession({ headers });
 
         if (!session) {
           return status(401, { message: "not authenticated" });
