@@ -3,9 +3,9 @@ import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { admin, openAPI, username } from "better-auth/plugins";
 
-import { env } from "@/config/env.js";
-import { client, db } from "@/database/client.js";
-import { generateSnowflakeId } from "@/utils/snowflake.js";
+import { env } from "../config/env.js";
+import { client, db } from "../database/client.js";
+import { generateSnowflakeId } from "../utils/snowflake.js";
 
 const USERNAME_REGEX = /^[a-zA-Z0-9_-]+$/;
 

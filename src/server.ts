@@ -4,9 +4,9 @@ import { Elysia } from "elysia";
 import { node } from "@elysiajs/node";
 import z from "zod";
 
-import { env } from "@/config/env.js";
-import { betterAuthPlugin, OpenAPI } from "@/http/plugins/better-auth.js";
-import { logger } from "@/utils/logger.js";
+import { env } from "./config/env.js";
+import { betterAuthPlugin, OpenAPI } from "./http/plugins/better-auth.js";
+import { logger } from "./utils/logger.js";
 import PKG from "../package.json" with { type: "json" };
 
 
