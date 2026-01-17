@@ -9,8 +9,7 @@ import { betterAuthPlugin, OpenAPI } from "./http/plugins/better-auth.js";
 import { logger } from "./utils/logger.js";
 import PKG from "../package.json" with { type: "json" };
 
-
-export const app = new Elysia({ name: "ARC Studio, API.", adapter: node() })
+const app = new Elysia({ name: "ARC Studio, API.", adapter: node() })
   // .onError((err) => {
   //   if (err.code === "NOT_FOUND") {
   //     return {
@@ -25,7 +24,7 @@ export const app = new Elysia({ name: "ARC Studio, API.", adapter: node() })
       methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
       credentials: true,
       allowedHeaders: ["Content-Type", "Authorization"],
-    })
+    }),
   )
   .use(
     openapi({
@@ -51,7 +50,7 @@ export const app = new Elysia({ name: "ARC Studio, API.", adapter: node() })
           },
         ],
       },
-    })
+    }),
   )
   .use(betterAuthPlugin)
   .get(
@@ -64,7 +63,7 @@ export const app = new Elysia({ name: "ARC Studio, API.", adapter: node() })
         summary: "/",
         tags: ["Default"],
       },
-    }
+    },
   )
   .get(
     "/me",
@@ -97,11 +96,13 @@ export const app = new Elysia({ name: "ARC Studio, API.", adapter: node() })
           message: z.string().default("not authenticated"),
         }),
       },
-    }
-  )
-  .listen(
-    { port: env.DEFAULT_PORT },
-    (info) => {
-      logger(`🔥 api is running at ${info.hostname}:${info.port}`);
-    }
+    },
   );
+
+export default app;
+
+if (process.env.NODE_ENV !== "production") {
+  app.listen({ port: env.DEFAULT_PORT }, (info) => {
+    logger(`🔥 api is running at ${info.hostname}:${info.port}`);
+  });
+}
