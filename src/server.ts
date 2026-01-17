@@ -1,7 +1,7 @@
 import { openapi } from "@elysiajs/openapi";
 import { cors } from "@elysiajs/cors";
 import { Elysia } from "elysia";
-// import { node } from "@elysiajs/node";
+import { node } from "@elysiajs/node";
 import z from "zod";
 
 import { env } from "./config/env.js";
@@ -11,16 +11,8 @@ import PKG from "../package.json" with { type: "json" };
 
 export default new Elysia({
   name: "ARC Studio, API.",
-  // adapter: node()
+  adapter: node()
 })
-  // .onError((err) => {
-  //   if (err.code === "NOT_FOUND") {
-  //     return {
-  //       status: 404,
-  //       message: "Route not found.",
-  //     };
-  //   }
-  // })
   .use(
     cors({
       origin: [env.WEB_APP_URL, env.WEB_URL, env.WEB_DEV_URL],
@@ -42,8 +34,8 @@ export default new Elysia({
           description: "Principal API for ARC Studio, Inc.",
         },
 
-        components: await OpenAPI.components as any,
-        paths: await OpenAPI.getPaths() as any,
+        components: (await OpenAPI.components) as any,
+        paths: (await OpenAPI.getPaths()) as any,
 
         tags: [
           { name: "Default", description: "Default routes" },
