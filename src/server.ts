@@ -9,7 +9,7 @@ import { betterAuthPlugin, OpenAPI } from "./http/plugins/better-auth.js";
 import { logger } from "./utils/logger.js";
 import PKG from "../package.json" with { type: "json" };
 
-export const app = new Elysia({
+export default new Elysia({
   name: "ARC Studio, API.",
   // adapter: node()
 })
@@ -42,9 +42,8 @@ export const app = new Elysia({
           description: "Principal API for ARC Studio, Inc.",
         },
 
-        // ⬇️ AQUI é onde a fantasia acaba
-        components: (await OpenAPI.components) as any,
-        paths: (await OpenAPI.getPaths()) as any,
+        components: OpenAPI.components as any,
+        paths: OpenAPI.getPaths() as any,
 
         tags: [
           { name: "Default", description: "Default routes" },
