@@ -1,7 +1,7 @@
 import { openapi } from "@elysiajs/openapi";
 import { cors } from "@elysiajs/cors";
 import { Elysia } from "elysia";
-import { node } from "@elysiajs/node";
+// import { node } from "@elysiajs/node";
 import z from "zod";
 
 import { env } from "./config/env.js";
@@ -9,7 +9,10 @@ import { betterAuthPlugin, OpenAPI } from "./http/plugins/better-auth.js";
 import { logger } from "./utils/logger.js";
 import PKG from "../package.json" with { type: "json" };
 
-const app = new Elysia({ name: "ARC Studio, API.", adapter: node() })
+export const app = new Elysia({
+  name: "ARC Studio, API.",
+  // adapter: node()
+})
   // .onError((err) => {
   //   if (err.code === "NOT_FOUND") {
   //     return {
@@ -28,6 +31,7 @@ const app = new Elysia({ name: "ARC Studio, API.", adapter: node() })
   )
   .use(
     openapi({
+      // enabled: process.env.NODE_ENV !== "production",
       mapJsonSchema: {
         zod: z.toJSONSchema,
       },
@@ -88,7 +92,7 @@ const app = new Elysia({ name: "ARC Studio, API.", adapter: node() })
         201: z.object({
           id: z.string(),
           name: z.string(),
-          email: z.string().email(),
+          email: z.email(),
           emailVerified: z.boolean(),
           role: z.string(),
         }),
@@ -97,12 +101,7 @@ const app = new Elysia({ name: "ARC Studio, API.", adapter: node() })
         }),
       },
     },
-  );
-
-export default app;
-
-if (process.env.NODE_ENV !== "production") {
-  app.listen({ port: env.DEFAULT_PORT }, (info) => {
+  )
+  .listen({ port: env.DEFAULT_PORT }, (info) => {
     logger(`🔥 api is running at ${info.hostname}:${info.port}`);
   });
-}
