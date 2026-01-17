@@ -1,11 +1,11 @@
 {
   "name": "api",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "type": "module",
   "scripts": {
     "dev": "tsx watch --env-file=.env.development.local src/server.ts",
     "build": "tsc && tsc-alias",
-    "start": "node --env-file=.env.development.local dist/server.js"
+    "start": "node --env-file=.env dist/server.js"
   },
   "author": {
     "name": "Israel R. Jatobá",
@@ -26,7 +26,6 @@
   },
   "devDependencies": {
     "@types/node": "^25.0.9",
-    "bun-types": "latest",
     "tsc-alias": "^1.8.16",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
