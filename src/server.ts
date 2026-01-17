@@ -42,8 +42,8 @@ export default new Elysia({
           description: "Principal API for ARC Studio, Inc.",
         },
 
-        components: OpenAPI.components as any,
-        paths: OpenAPI.getPaths() as any,
+        components: await OpenAPI.components as any,
+        paths: await OpenAPI.getPaths() as any,
 
         tags: [
           { name: "Default", description: "Default routes" },
